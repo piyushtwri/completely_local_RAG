@@ -10,9 +10,7 @@ from langchain_ollama import OllamaLLM
 model=OllamaLLM(model=model)
 
 #%%
-from langchain_community.document_loaders import PyPDFLoader
-loader=PyPDFLoader(file_name)
-pages=loader.load_and_split()
+pages=utils.load_pdf(file_name)
 
 #%%
 from langchain.prompts import PromptTemplate
@@ -32,21 +30,16 @@ embeddings=OllamaEmbeddings(model="smollm")
 
 # %%
 # create a vector store and get a retriever
-from langchain_community.vectorstores import DocArrayInMemorySearch
-vector_store=DocArrayInMemorySearch.from_documents(pages, embedding=embeddings)
-retriever=vector_store.as_retriever()
+retriever=utils.vector_store_in_memory(pages, embeddings)
 # %%
 # Create a chain pipeline that can take input questions and answer them based on the context provided
 from operator import itemgetter
-
-chain = ({  "context":itemgetter("question") | retriever,
-            "question":itemgetter("question")}
-            |prompt|model)
+chain = ({"context":itemgetter("question") | retriever,"question":itemgetter("question")}|prompt|model)
 
 # %%
 # Ask questions and print the answers untill stop is entered
 question="What is the pdf about?"
 while question !="":
-    question = input("Enter your Question:...\n")
+    question = input("Enter your Question:...\n\t\t\t")
     print(chain.invoke({"question":question}))
 # %%
