@@ -1,3 +1,6 @@
 .venv
 .git
-paper.pdf
+__pycache__/
+chroma_db/
+chroma_db_old/
+utils.py
