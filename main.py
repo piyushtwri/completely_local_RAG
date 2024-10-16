@@ -48,5 +48,5 @@ chain = ({  "context":itemgetter("question") | retriever,
 question="What is the pdf about?"
 while question !="":
     question = input("Enter your Question:...\n")
-    print(chain.invoke({"question":question}))
+    print(f"Response: {chain.invoke({'question':question})}")
 # %%
